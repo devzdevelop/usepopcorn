@@ -18,7 +18,7 @@ export default function MoviesList ({movies}) {
               {movies?.map((movie) => (
                 <Movie movie={movie}>
                   <p>
-                    <span>🗓</span>
+                    <span>📅</span>
                     <span>{movie.Year}</span>
                   </p>
                 </Movie>
@@ -28,3 +28,4 @@ export default function MoviesList ({movies}) {
         </div>
   );
 }
+// 🗓

@@ -16,7 +16,7 @@ export default function SavedMovies ({watched, avgImdbRating, avgUserRating, avg
           </button>
           {isOpen2 && (
             <>
-              <WatchedMoviesSummary watched={watched, avgImdbRating, avgUserRating, avgRuntime}/>
+              <WatchedMoviesSummary watched={watched} avgImdbRating={avgImdbRating} avgUserRating={avgUserRating} avgRuntime={avgRuntime}/>
               <SavedMoviesList watched={watched}/>
             </>
           )}

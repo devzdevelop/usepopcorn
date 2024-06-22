@@ -11,7 +11,7 @@ export default function Navigation ({movies}) {
     <>
       <nav className="nav-bar">
         <Logo />
-        <Search query={query}/>
+        <Search query={query} setQuery={setQuery}/>
         <Results movies={movies}/>
       </nav>
     </>
