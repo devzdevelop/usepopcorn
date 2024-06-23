@@ -1,6 +1,6 @@
 import Movie from './Movie'
 
-export default function SavedMoviesList ({watched}) {
+export default function WatchedMoviesList ({watched}) {
   
   return (
     <ul className="list">

@@ -2,9 +2,9 @@ import {useState } from 'react'
 
 import Logo from './Logo'
 import Search from './Search'
-import Results from './Results'
+import NumResults from './NumResults'
 
-export default function Navigation ({movies}) {
+export default function Navigation () {
   const [query, setQuery] = useState("");
   
   return (
@@ -12,7 +12,7 @@ export default function Navigation ({movies}) {
       <nav className="nav-bar">
         <Logo />
         <Search query={query} setQuery={setQuery}/>
-        <Results movies={movies}/>
+        <NumResults />
       </nav>
     </>
   );

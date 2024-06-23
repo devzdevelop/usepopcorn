@@ -1,9 +1,9 @@
 import {useState} from 'react'
 
-import SavedMoviesList from './SavedMoviesList'
+import WatchedMoviesList from './WatchedMoviesList'
 import WatchedMoviesSummary from './WatchedMoviesSummary'
 
-export default function SavedMovies ({watched, avgImdbRating, avgUserRating, avgRuntime}) {
+export default function SavedMovies ({watched}) {
   const [isOpen2, setIsOpen2] = useState(true);
   
   return (
@@ -16,8 +16,8 @@ export default function SavedMovies ({watched, avgImdbRating, avgUserRating, avg
           </button>
           {isOpen2 && (
             <>
-              <WatchedMoviesSummary watched={watched} avgImdbRating={avgImdbRating} avgUserRating={avgUserRating} avgRuntime={avgRuntime}/>
-              <SavedMoviesList watched={watched}/>
+              <WatchedMoviesSummary watched={watched} />
+              <WatchedMoviesList watched={watched}/>
             </>
           )}
         </div>
