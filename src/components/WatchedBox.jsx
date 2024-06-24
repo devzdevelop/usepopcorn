@@ -3,7 +3,7 @@ import {useState} from 'react'
 import WatchedMoviesList from './WatchedMoviesList'
 import WatchedMoviesSummary from './WatchedMoviesSummary'
 
-export default function SavedMovies ({watched}) {
+export default function WatchedBox ({watched}) {
   const [isOpen2, setIsOpen2] = useState(true);
   
   return (

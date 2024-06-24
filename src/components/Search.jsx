@@ -1,4 +1,9 @@
-export default function Search ({query, setQuery}) {
+import { useState
+  
+ } from "react";
+export default function Search () {
+  const [query, setQuery] = useState("");
+
   return (     
     <input
       className="search"
