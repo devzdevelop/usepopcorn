@@ -1,4 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
+import PropTypes from "prop-types"
+import Star from './Star'
+
 const containerStyle = {
     display: 'flex',
     alignItems: 'center',
@@ -11,19 +14,61 @@ const starContainerStyle = {
     gap: '4px'
 }
 
-const textStyle = {
-    lineHeight: '1',
-    margin: 0
+StarRating.propTypes = {
+    maxRating: PropTypes.number,
+    color: PropTypes.string,
+    size: PropTypes.number,
+    className: PropTypes.string,
+    messages: PropTypes.array,
+    defaultRating: PropTypes.number,
+    onSetRating: PropTypes.func
 }
 
-export default function StarRating({maxRating = 5}) {
+export default function StarRating({
+    maxRating = 5, 
+    color="#E0B302", 
+    size= 48,
+    className = '',
+    messages = [],
+    defaultRating = 0,
+    onSetRating,
+}) {
+   const [rating, setRating] = useState(defaultRating);
+   const [tempRating, setTempRating] = useState(0);
+
+   const handleRating = (rating) => {
+    setRating(rating);
+    onSetRating(rating);
+   }
    
+   const textStyle = {
+    lineHeight: '1',
+    margin: 0,
+    color: color,
+    fontSize: `${size / 1.5}px`
+    }
+
+   console.log(tempRating);
+
   return (
-    <div style={containerStyle}>
+    <div style={containerStyle} className={className}>
         <div style={starContainerStyle}>
-            {Array.from({length: maxRating}, (_, i) => <span>⭐{i+1}</span>)}
+            {Array.from({length: maxRating}, (_, i) => (
+                <span>
+                    <Star 
+                    key={i} 
+                    onRate={() => handleRating(i+1)} 
+                    full={tempRating ? (i+1) <= tempRating : rating >= i + 1 ? true : false}
+                    onHoverIn={() => setTempRating(i+1)}
+                    onHoverOut={() => setTempRating(0)}
+                    onTempRating={tempRating}
+                    size={size}
+                    color={color}
+                    />
+                </span>
+            ))}
         </div>
-        <p style={textStyle}>10</p>
+        <p style={textStyle}>{messages.length === maxRating ? messages[tempRating ? tempRating - 1 : rating - 1] :tempRating || rating || ""}</p>
     </div>
   )
 }
