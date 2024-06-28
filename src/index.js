@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-// import './index.css';
+import './index.css';
 import StarRating from './components/StarRating';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -9,10 +9,10 @@ import Test from './components/Test';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    {/* <App /> */}
-    <StarRating maxRating={5} messages={['Terrible', 'Bad', 'Ok', 'Good', 'Amazing']} defaultRating={3}/>
+    <App />
+    {/* <StarRating maxRating={5} messages={['Terrible', 'Bad', 'Ok', 'Good', 'Amazing']} defaultRating={3}/>
     <StarRating maxRating={5} size={30} color="#463DD9" className="test" />
-    <Test />
+    <Test /> */}
   </React.StrictMode>
 );
 

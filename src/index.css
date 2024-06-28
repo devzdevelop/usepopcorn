@@ -44,6 +44,7 @@ body {
 .main {
   margin-top: 2.4rem;
   height: calc(100vh - 7.2rem - 3 * 2.4rem);
+  height: fit-content;
   display: flex;
   gap: 2.4rem;
   justify-content: center;
@@ -52,10 +53,12 @@ body {
 .box {
   width: 42rem;
   max-width: 42rem;
+  height: fit-content;
   background-color: var(--color-background-500);
   border-radius: 0.9rem;
   /* overflow: scroll; */
   position: relative;
+  /* z-index: -1; */
 }
 
 .loader {
@@ -242,6 +245,7 @@ body {
 .details {
   line-height: 1.4;
   font-size: 1.4rem;
+  height: 500px;
 }
 
 .details header {
