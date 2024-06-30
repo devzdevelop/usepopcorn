@@ -4,7 +4,7 @@ export default function Movie (props) {
       <img src={props.movie.Poster} alt={`${props.movie.Title} poster`} />
       <h3>{props.movie.Title}</h3>
       <div>
-      {props.children}
+        {props.children}
       </div>
     </li>
   );

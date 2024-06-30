@@ -1,12 +1,21 @@
 import "../index.css"
 
 function ErrorMessage({message}) {
-    return (
-        <p className="error">
-            <span>⛔</span>
-            {message}
-        </p>
-    )
+    if(message === "Search for a movie") {
+        return (
+            <p className="error">
+                <span>🔍 </span>
+                {message}
+            </p>
+        )
+    } else {
+        return (
+            <p className="error">
+                <span>⛔ </span>
+                {message}
+            </p>
+        )
+    }
 }
 
 export default ErrorMessage

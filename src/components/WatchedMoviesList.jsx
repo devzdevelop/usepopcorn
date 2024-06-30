@@ -1,14 +1,14 @@
-import Movie from './Movie'
+import WatchedMovie from './WatchedMovie'
 
-export default function WatchedMoviesList ({watched}) {
-  
+export default function WatchedMoviesList ({watched, onDeleteWatched}) {
+  // console.log("Watched: ", watched)
   return (
     <ul className="list">
       {watched.map((movie) => (
-        <Movie movie={movie} key={movie.imdbID}>
+        <WatchedMovie movie={movie} key={movie.imdbID} onDeleteWatched={onDeleteWatched} >
           <p>
             <span>⭐️</span>
-            <span>{movie.imdbRating}</span>
+            <span>{isNaN(movie.imdbRating) ? "NaN" : movie.imdbRating}</span>
           </p>
           <p>
             <span>🌟</span>
@@ -18,7 +18,7 @@ export default function WatchedMoviesList ({watched}) {
             <span>⏳</span>
             <span>{movie.runtime} min</span>
           </p>         
-        </Movie>
+        </WatchedMovie>
         
       ))}
     </ul>

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 
 import './index.css'
-import {tempWatchedData} from './data/movieData'
 
 import Navigation from './components/Navigation'
 import Main from './components/Main'
@@ -20,7 +19,7 @@ import MovieDetails from "./components/MovieDetails";
 const KEY = "d39fd186"
 export default function App() {
   const [movies, setMovies] = useState([]);
-  const [watched, setWatched] = useState(tempWatchedData);
+  const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const [pageList, setPageList] = useState(1);
@@ -33,12 +32,27 @@ export default function App() {
     setSeletectedId(selectedId => id === selectedId ? null : id);
   }
 
+  // handle close movie details
   const handleCloseMovie = () => {
     setSeletectedId(null);
   }
 
+  // adding watched movies
+  const handleAddWatched = (movie) => {  
+    setWatched((prev) => {  
+      return [...prev, movie]
+    })   
+  }
+
+  // handle the remove movies in the watchedList
+  const handleDeleteWatched = (id) => {
+    setWatched(watch => watched.filter( movie => movie.imdbID !== id))
+  }
+
   // fetching movie data from OMDb API
   useEffect(() => {
+    const controller = new AbortController();
+
     const getMovies = async () =>{
       try {
         setIsLoading(true);
@@ -48,13 +62,14 @@ export default function App() {
           setPageList(undefined)
         }
 
-        const res = await fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=${query}&page=${currentPage}`)
+        const res = await fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=${query}&page=${currentPage}`, 
+        { signal : controller.signal })
 
         const data = await res.json();
 
         // handing some errors when fetching
-        console.log(data);
-        console.log(data.Error)
+        // console.log(data);
+        // console.log('Fetch Movie List Error: ', data.Error || 'No error.');
 
         if(data.Error === "Too many results." || data.Error === "Movie not found!" || data.Error === 'Incorrect IMDb ID.') {
           if(data.Error === "Movie not found!") {
@@ -66,12 +81,11 @@ export default function App() {
           if(data.Error === 'Incorrect IMDb ID.') {
             throw new Error('Search for a movie')
           }
-          console.log('printed false')
           return
         } else {
-          console.log('printed true')
           setMovies(data.Search)
-          console.log('Data: ', query)
+          setError("");
+          // console.log('Search Query: ', query)
         }
 
         // calculates the total number of pages based on the amount of fetch results
@@ -79,13 +93,22 @@ export default function App() {
 
         setIsLoading(false);
       } catch (error) {
-        setError(error.message);
         console.log("error: ", error);
+        if(error.name !== "AbortError") {
+          setError(error.message);
+        }
+        
       } finally {
         setIsLoading(false);
       }
     }
+
+    handleCloseMovie();
+    
     getMovies();
+
+    return () => controller.abort();
+
   },[query, pageList, currentPage])
 
   return (
@@ -100,15 +123,19 @@ export default function App() {
               <div style={{height: '40px'}}></div>
               {isLoading && <Loader />}
               {!isLoading && error && <ErrorMessage message={error} />}
-              {!isLoading && !error && <MovieList movies={movies} handleSelectMovie={handleSelectMovie}/>}
+              {!isLoading && !error && <MovieList movies={movies} handleSelectMovie={handleSelectMovie} />}
           </Box>
-          <Box2 watched={watched}>
+          <Box2>
             {
               selectedId 
-              ? <MovieDetails selectedId={selectedId} onCloseMovie={handleCloseMovie} />
+              ? <MovieDetails 
+              selectedId={selectedId} 
+              onCloseMovie={handleCloseMovie} 
+              onAddWatched={handleAddWatched} 
+              onWatched={watched} />
               : <>
                   <WatchedMoviesSummary watched={watched} />
-                  <WatchedMoviesList watched={watched}/>
+                  <WatchedMoviesList watched={watched} onDeleteWatched={handleDeleteWatched}/>
                 </>
             }
           </Box2>
