@@ -1,3 +1,4 @@
+import { useKey } from "../hooks/useKey";
 import Loader from "./Loader";
 import StarRating from './StarRating';
 
@@ -37,20 +38,8 @@ function MovieDetails({selectedId, onCloseMovie, onAddWatched, onWatched}) {
         onCloseMovie();
     }
 
-     // listenting to a keypress
-    useEffect(()=> {
-    
-        function callback(e) {
-            if(e.code === 'Escape') {
-                onCloseMovie();
-            }                  
-        }
-
-        document.addEventListener('keydown', callback);
-
-        return () => document.removeEventListener('keydown', callback);
-
-    },[onCloseMovie])
+    // listenting to a keypress
+    useKey('Escape', onCloseMovie);
 
     // changing page title based on the selected movie
     useEffect(() => {
