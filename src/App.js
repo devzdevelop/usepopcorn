@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState} from "react";
 
 import './index.css'
 
@@ -15,17 +15,21 @@ import Loader from "./components/Loader";
 import ErrorMessage from "./components/ErrorMessage";
 import Pages from "./components/Pages";
 import MovieDetails from "./components/MovieDetails";
+import { useMovies } from "./hooks/useMovies";
+import { useLocalStorageState } from "./data/useLocalStorageState";
 
-const KEY = "d39fd186"
+
 export default function App() {
-  const [movies, setMovies] = useState([]);
-  const [watched, setWatched] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
+  
   const [pageList, setPageList] = useState(1);
   const [currentPage, setCurrentPage] = useState(pageList ? 1 : undefined);
-  const [query, setQuery] = useState("");
   const [selectedId, setSeletectedId] = useState(null);
+  const [query, setQuery] = useState("");
+  
+  // custom hooks
+  const {movies, isLoading, error} = useMovies(query, currentPage, setPageList, pageList); 
+  const [watched, setWatched] = useLocalStorageState([], "watched");
+
 
   // select movie handle
   const handleSelectMovie = (id) => {
@@ -48,68 +52,6 @@ export default function App() {
   const handleDeleteWatched = (id) => {
     setWatched(watch => watched.filter( movie => movie.imdbID !== id))
   }
-
-  // fetching movie data from OMDb API
-  useEffect(() => {
-    const controller = new AbortController();
-
-    const getMovies = async () =>{
-      try {
-        setIsLoading(true);
-        setError(false);
-
-        if(!query) {
-          setPageList(undefined)
-        }
-
-        const res = await fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=${query}&page=${currentPage}`, 
-        { signal : controller.signal })
-
-        const data = await res.json();
-
-        // handing some errors when fetching
-        // console.log(data);
-        // console.log('Fetch Movie List Error: ', data.Error || 'No error.');
-
-        if(data.Error === "Too many results." || data.Error === "Movie not found!" || data.Error === 'Incorrect IMDb ID.') {
-          if(data.Error === "Movie not found!") {
-            throw new Error(data.Error);
-          }
-          if(data.Error === "Too many results.") {
-            throw new Error("No movies found. Please type in more characters for the movie you are searching for.");
-          }
-          if(data.Error === 'Incorrect IMDb ID.') {
-            throw new Error('Search for a movie')
-          }
-          return
-        } else {
-          setMovies(data.Search)
-          setError("");
-          // console.log('Search Query: ', query)
-        }
-
-        // calculates the total number of pages based on the amount of fetch results
-        setPageList( Math.floor((data.totalResults / data.Search.length)));
-
-        setIsLoading(false);
-      } catch (error) {
-        console.log("error: ", error);
-        if(error.name !== "AbortError") {
-          setError(error.message);
-        }
-        
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    handleCloseMovie();
-    
-    getMovies();
-
-    return () => controller.abort();
-
-  },[query, pageList, currentPage])
 
   return (
     <div>
@@ -140,7 +82,6 @@ export default function App() {
             }
           </Box2>
         </div>
-        
       </Main>
       {!isLoading && !error && pageList > 0 && <Pages page={pageList} currentPage={currentPage} setCurrentPage={setCurrentPage}/>}
       
